@@ -26,9 +26,19 @@
 		<script>
 		
 		var scene, camera, renderer, controls, stats;
+
+		var geometry = new THREE.BoxGeometry(1,1,1);
+		var materialGrey = new THREE.MeshBasicMaterial( { color: 0xaaaaaa } );
+		var materialGrey2 = new THREE.MeshBasicMaterial( { color: 0x888888 } );
+		var materialGrey3 = new THREE.MeshBasicMaterial( { color: 0x666666 } );
+		var materialRed = new THREE.MeshBasicMaterial({ color: 0xFF0000 });
+		var materialBrown = new THREE.MeshBasicMaterial({ color: 0xBA4A00 });
+		var materialBlack = new THREE.MeshBasicMaterial( { color: 0x111111 } );
 		
+		scene = new THREE.Scene();
+
 		function Start() {
-			scene = new THREE.Scene();
+
 			camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
 			renderer = new THREE.WebGLRenderer( {antialias: true} );
@@ -38,14 +48,6 @@
 			
 			camera.position.set(3,4,6);
 			camera.lookAt( new THREE.Vector3(0,0,0));
-			
-			var geometry = new THREE.BoxGeometry(1,1,1);
-			var materialGrey = new THREE.MeshBasicMaterial( { color: 0xaaaaaa } );
-			var materialGrey2 = new THREE.MeshBasicMaterial( { color: 0x888888 } );
-			var materialGrey3 = new THREE.MeshBasicMaterial( { color: 0x666666 } );
-			var materialRed = new THREE.MeshBasicMaterial({ color: 0xFF0000 });
-			var materialBrown = new THREE.MeshBasicMaterial({ color: 0xBA4A00 });
-			var materialBlack = new THREE.MeshBasicMaterial( { color: 0x111111 } );
 
 			var Hor = 2;
 			var Ver = 1;
@@ -138,138 +140,151 @@
 
 			}
 
-			//commencing faces building
-			var siFrFace = new THREE.Mesh( geometry, materialGrey );
-			scene.add( siFrFace );
-			siFrFace.scale.set(7, 13, 3);
-			siFrFace.position.set(-6.5, 6.5, 0);
-			
-			var upFrFace = new THREE.Mesh( geometry, materialGrey );
-			scene.add( upFrFace );
-			upFrFace.scale.set(3, 3, 3);
-			upFrFace.position.set(-1.5, 11.5, 0);
+			function HalfStructure(side){
 
-			//side face
-			var sideFace = new THREE.Mesh( geometry, materialGrey );
-			scene.add( sideFace );
-			sideFace.scale.set(3, 13, 12);
-			sideFace.position.set(-8.5, 6.5, -7.5);
+				//commencing faces building
+				var siFrFace = new THREE.Mesh( geometry, materialGrey );
+				scene.add( siFrFace );
+				siFrFace.scale.set(7, 13, 3);
+				siFrFace.position.set(side*-6.5, 6.5, 0);
+				
+				var upFrFace = new THREE.Mesh( geometry, materialGrey );
+				scene.add( upFrFace );
+				upFrFace.scale.set(3, 3, 3);
+				upFrFace.position.set(side*-1.5, 11.5, 0);
 
-			//back face
-			var backFace = new THREE.Mesh( geometry, materialGrey );
-			scene.add( backFace );
-			backFace.scale.set(6, 13, 3);
-			backFace.position.set(-7, 6.5, -15);
+				//side face
+				var sideFace = new THREE.Mesh( geometry, materialGrey );
+				scene.add( sideFace );
+				sideFace.scale.set(3, 13, 12);
+				sideFace.position.set(side*-8.5, 6.5, -7.5);
 
-			//corner towers
-			var fTowFloor = new THREE.Mesh( geometry, materialGrey2 );
-			scene.add( fTowFloor );
-			fTowFloor.scale.set(5, 2, 5);
-			fTowFloor.position.set(-8.5, 14, 0);
+				//back face
+				var backFace = new THREE.Mesh( geometry, materialGrey );
+				scene.add( backFace );
+				backFace.scale.set(6, 13, 3);
+				backFace.position.set(side*-7, 6.5, -15);
 
-			var bTowFloor = new THREE.Mesh( geometry, materialGrey2 );
-			scene.add( bTowFloor );
-			bTowFloor.scale.set(5, 2, 5);
-			bTowFloor.position.set(-8.5, 14, -15);
+				//corner towers
+				var fTowFloor = new THREE.Mesh( geometry, materialGrey2 );
+				scene.add( fTowFloor );
+				fTowFloor.scale.set(5, 2, 5);
+				fTowFloor.position.set(side*-8.5, 14, 0);
 
-			//central structure
-			var cenSide = new THREE.Mesh( geometry, materialGrey3 );
-			scene.add( cenSide );
-			cenSide.scale.set(1, 14, 3);
-			cenSide.position.set(-4.5, 7, -12);
+				var bTowFloor = new THREE.Mesh( geometry, materialGrey2 );
+				scene.add( bTowFloor );
+				bTowFloor.scale.set(5, 2, 5);
+				bTowFloor.position.set(side*-8.5, 14, -15);
 
-			var cenFront = new THREE.Mesh( geometry, materialGrey3 );
-			scene.add( cenFront );
-			cenFront.scale.set(4, 14, 1);
-			cenFront.position.set(-2, 7, -11);
+				//central structure
+				var cenSide = new THREE.Mesh( geometry, materialGrey3 );
+				scene.add( cenSide );
+				cenSide.scale.set(1, 14, 3);
+				cenSide.position.set(side*-4.5, 7, -12);
 
-			var cenBody = new THREE.Mesh( geometry, materialGrey2 );
-			scene.add( cenBody );
-			cenBody.scale.set(4, 16, 7);
-			cenBody.position.set(-2, 8, -15);
-			
-			var cenTow = new THREE.Mesh( geometry, materialGrey3 );
-			scene.add( cenTow );
-			cenTow.scale.set(2, 4, 3);
-			cenTow.position.set(-1, 18, -15);
+				var cenFront = new THREE.Mesh( geometry, materialGrey3 );
+				scene.add( cenFront );
+				cenFront.scale.set(4, 14, 1);
+				cenFront.position.set(side*-2, 7, -11);
 
-			var lRoof = new THREE.Mesh( geometry, materialRed );
-			scene.add( lRoof );
-			lRoof.scale.set(2, 1, 3);
-			lRoof.position.set(-1, 20.5, -15);
+				var cenBody = new THREE.Mesh( geometry, materialGrey2 );
+				scene.add( cenBody );
+				cenBody.scale.set(4, 16, 7);
+				cenBody.position.set(side*-2, 8, -15);
+				
+				var cenTow = new THREE.Mesh( geometry, materialGrey3 );
+				scene.add( cenTow );
+				cenTow.scale.set(2, 4, 3);
+				cenTow.position.set(side*-1, 18, -15);
 
-			var uRoof = new THREE.Mesh( geometry, materialRed );
-			scene.add( uRoof );
-			uRoof.scale.set(1, 1, 3);
-			uRoof.position.set(-0.5, 21, -15);
+				var lRoof = new THREE.Mesh( geometry, materialRed );
+				scene.add( lRoof );
+				lRoof.scale.set(2, 1, 3);
+				lRoof.position.set(side*-1, 20.5, -15);
 
-			var casMer = new THREE.Mesh( geometry, materialGrey3 );
-			scene.add( casMer );
-			casMer.position.set(-0.5, 16.5, -12);
+				var uRoof = new THREE.Mesh( geometry, materialRed );
+				scene.add( uRoof );
+				uRoof.scale.set(1, 1, 3);
+				uRoof.position.set(side*-0.5, 21, -15);
 
-			var casMer2 = new THREE.Mesh( geometry, materialGrey3 );
-			scene.add( casMer2 );
-			casMer2.position.set(-2.5, 16.5, -12);
+					//castle tower merlons placement
 
-			var casMer3 = new THREE.Mesh( geometry, materialGrey3 );
-			scene.add( casMer3 );
-			casMer3.scale.set( 1, 1, 2);
-			casMer3.position.set(-3.5, 16.5, -12.5);
+				var casMer = new THREE.Mesh( geometry, materialGrey3 );
+				scene.add( casMer );
+				casMer.position.set(side*-0.5, 16.5, -12);
 
-			var casMer4 = new THREE.Mesh( geometry, materialGrey3 );
-			scene.add( casMer4 );
-			casMer4.position.set(-3.5, 16.5, -15);
+				var casMer2 = new THREE.Mesh( geometry, materialGrey3 );
+				scene.add( casMer2 );
+				casMer2.position.set(side*-2.5, 16.5, -12);
 
-			var casMer5 = new THREE.Mesh( geometry, materialGrey3 );
-			scene.add( casMer5 );
-			casMer5.scale.set( 1, 1, 2);
-			casMer5.position.set(-3.5, 16.5, -17.5);
+				var casMer3 = new THREE.Mesh( geometry, materialGrey3 );
+				scene.add( casMer3 );
+				casMer3.scale.set( 1, 1, 2);
+				casMer3.position.set(side*-3.5, 16.5, -12.5);
 
-			var casMer6 = new THREE.Mesh( geometry, materialGrey3 );
-			scene.add( casMer6 );
-			casMer6.position.set(-2.5, 16.5, -18);
+				var casMer4 = new THREE.Mesh( geometry, materialGrey3 );
+				scene.add( casMer4 );
+				casMer4.position.set(side*-3.5, 16.5, -15);
 
-			var casMer7 = new THREE.Mesh( geometry, materialGrey3 );
-			scene.add( casMer7 );
-			casMer7.position.set(-0.5, 16.5, -18);
+				var casMer5 = new THREE.Mesh( geometry, materialGrey3 );
+				scene.add( casMer5 );
+				casMer5.scale.set( 1, 1, 2);
+				casMer5.position.set(side*-3.5, 16.5, -17.5);
 
-			//building the warehouse
-			var warehouse = new THREE.Mesh( geometry, materialBrown );
-			scene.add( warehouse );
-			warehouse.scale.set(3, 4, 6);
-			warehouse.position.set(-5.5, 2, -6.5);
+				var casMer6 = new THREE.Mesh( geometry, materialGrey3 );
+				scene.add( casMer6 );
+				casMer6.position.set(side*-2.5, 16.5, -18);
 
-			var door = new THREE.Mesh( geometry, materialBlack );
-			scene.add( door );
-			door.scale.set(0.1, 2, 1);
-			door.position.set(-3.95, 1, -8);
+				var casMer7 = new THREE.Mesh( geometry, materialGrey3 );
+				scene.add( casMer7 );
+				casMer7.position.set(side*-0.5, 16.5, -18);
+
+				//building the warehouse
+				var warehouse = new THREE.Mesh( geometry, materialBrown );
+				scene.add( warehouse );
+				warehouse.scale.set(3, 4, 6);
+				warehouse.position.set(side*-5.5, 2, -6.5);
+
+				var door = new THREE.Mesh( geometry, materialBlack );
+				scene.add( door );
+				door.scale.set(0.1, 2, 1);
+				door.position.set(side*-3.95, 1, -8);
+
+				//back "merlons"
+				var bMer1 = new THREE.Mesh( geometry, materialGrey3 );
+				scene.add(bMer1);
+				bMer1.scale.set(2,1,1);
+				bMer1.position.set(side*-5, 13.5, -14);
+				
+				var bMer2 = new THREE.Mesh( geometry, materialGrey3 );
+				scene.add(bMer2);
+				bMer2.scale.set(2,1,1);
+				bMer2.position.set(side*-5, 13.5, -16);
+
+			}
+
+			HalfStructure(1);
+			HalfStructure(-1);
 
 			//merlons
 				//front merlons
 
 			wallMerlonsHor(-4.5, 1, Hor);
+			wallMerlonsHor(1.5, 1, Hor);
 
 				//side merlons
 
 			wallMerlonsHor(-9.5, -3, Ver);
 			wallMerlonsHor(-9.5, -8, Ver);
-
-				//back "merlons"
-			var bMer1 = new THREE.Mesh( geometry, materialGrey3 );
-			scene.add(bMer1);
-			bMer1.scale.set(2,1,1);
-			bMer1.position.set(-5, 13.5, -14);
-			
-			var bMer2 = new THREE.Mesh( geometry, materialGrey3 );
-			scene.add(bMer2);
-			bMer2.scale.set(2,1,1);
-			bMer2.position.set(-5, 13.5, -16);
+			wallMerlonsHor(7.5, -3, Ver);
+			wallMerlonsHor(7.5, -8, Ver);
 
 				//front&back tower merlons
-
+			
 			towerMerlons(-8.5, 0);
 			towerMerlons(-8.5, -15);
-
+			towerMerlons(8.5, 0);
+			towerMerlons(8.5, -15);
 
 			stats = new Stats();
 			stats.domElement.style.position = 'absolute';
@@ -282,11 +297,38 @@
 			controls = new THREE.OrbitControls( camera );
 			controls.addEventListener( 'change', Render );
 			
-			
 		}
-		
+
+		var liftingBridge = new THREE.Mesh( geometry, materialBrown );
+		liftingBridge.scale.set(6, 10, 1);
+		liftingBridge.position.set(0, 5, 0);
+
+		var hinge = new THREE.Object3D()
+		scene.add(hinge);
+		hinge.add( liftingBridge );
+		var t = Date.now();
+		var i = 0;
+
+		function bridgeRotate(verse){
+			var temp = Date.now();
+
+			if(verse == 0){
+				hinge.rotation.x += ( ( temp - t ) / 60 ) * Math.PI/180;
+				if(hinge.rotation.x >= 90*Math.PI/180){
+					i = 1;
+				}
+			} else {
+				hinge.rotation.x -= ( ( temp - t ) /60 ) * Math.PI/180;
+				if(hinge.rotation.x <= 0){
+					i = 0;
+				}
+			}
+			t = Date.now();
+		}
+
 		function Update() {
 			requestAnimationFrame( Update );
+			bridgeRotate(i);
 			controls.update();  
 			stats.update();
 			Render();
