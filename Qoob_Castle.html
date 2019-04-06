@@ -1,0 +1,248 @@
+<html>
+	<head>
+		<title>Qoob Castle</title>
+		<style>
+		
+		body {
+			font-family: Monospace;
+			background-color: #f0f0f0;
+			margin: 0px;
+			overflow: hidden;
+		}
+		
+		canvas { 
+			width: 100%; 
+			height: 100%;
+		}
+	
+	</style>
+		<script src="lib/three.min.js"></script>
+		<script src="lib/stats.min.js"></script>
+		<script src="lib/Coordinates.js"></script>
+		<script src="lib/OrbitControls.js"></script>
+	</head>
+	<body>
+		
+		<script>
+		
+		var scene, camera, renderer, controls, stats;
+		
+		function Start() {
+			scene = new THREE.Scene();
+			camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+			renderer = new THREE.WebGLRenderer( {antialias: true} );
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			renderer.setClearColor( 0xf0f0f0 );
+			document.body.appendChild( renderer.domElement );
+			
+			camera.position.set(3,4,6);
+			camera.lookAt( new THREE.Vector3(0,0,0));
+			
+			var geometry = new THREE.BoxGeometry(1,1,1);
+			var materialGrey = new THREE.MeshBasicMaterial( { color: 0xaaaaaa } );
+			var materialGrey2 = new THREE.MeshBasicMaterial( { color: 0x888888 } );
+			var materialGrey3 = new THREE.MeshBasicMaterial( { color: 0x666666 } );
+			var materialRed = new THREE.MeshBasicMaterial({ color: 0xFF0000 });
+			var materialBrown = new THREE.MeshBasicMaterial({ color: 0xBA4A00 });
+
+			var Hor = 2;
+			var Ver = 1;
+
+			function towerMerlons(centerx, centerz){
+			
+				var fTMer1 = new THREE.Mesh( geometry, materialGrey3 );
+				scene.add(fTMer1);
+				fTMer1.position.set(centerx-2, 15.5, centerz+2);
+
+				var fTMer2 = new THREE.Mesh( geometry, materialGrey3 );
+				scene.add(fTMer2);
+				fTMer2.position.set(centerx, 15.5, centerz+2);
+
+				var fTMer3 = new THREE.Mesh( geometry, materialGrey3 );
+				scene.add(fTMer3);
+				fTMer3.position.set(centerx+2, 15.5, centerz+2);
+
+				var fTMer4 = new THREE.Mesh( geometry, materialGrey3 );
+				scene.add(fTMer4);
+				fTMer4.position.set(centerx-2, 15.5, centerz);
+
+				var fTMer5 = new THREE.Mesh( geometry, materialGrey3 );
+				scene.add(fTMer5);
+				fTMer5.position.set(centerx+2, 15.5, centerz);
+
+				var fTMer6 = new THREE.Mesh( geometry, materialGrey3 );
+				scene.add(fTMer6);
+				fTMer6.position.set(centerx-2, 15.5, centerz-2);
+
+				var fTMer7 = new THREE.Mesh( geometry, materialGrey3 );
+				scene.add(fTMer7);
+				fTMer7.position.set(centerx, 15.5, centerz-2);
+
+				var fTMer8 = new THREE.Mesh( geometry, materialGrey3 );
+				scene.add(fTMer8);
+				fTMer8.position.set(centerx+2, 15.5, centerz-2);
+
+			}
+
+			function wallMerlonsHor(firstx, firstz, orient){
+
+				if(orient == Hor){
+					secondz = firstz-2;
+					secondx = firstx;
+				} else {
+					secondz = firstz;
+					secondx = firstx +2;
+				}
+
+				var fMer1 = new THREE.Mesh( geometry, materialGrey3 );
+				scene.add(fMer1);
+				fMer1.position.set(firstx, 13.5, firstz);
+
+				var fMer2 = new THREE.Mesh( geometry, materialGrey3 );
+				scene.add(fMer2);
+				fMer2.position.set(secondx, 13.5, secondz);
+
+				if(orient == Hor){
+					firstx += 2;
+					secondx += 2;					
+				} else {
+					firstz -= 2;
+					secondz -= 2;
+				}
+
+				var fMer3 = new THREE.Mesh( geometry, materialGrey3 );
+				scene.add(fMer3);
+				fMer3.position.set(firstx, 13.5, firstz);
+
+				var fMer4 = new THREE.Mesh( geometry, materialGrey3 );
+				scene.add(fMer4);
+				fMer4.position.set(secondx, 13.5, secondz);
+
+				if(orient == Hor){
+					firstx += 2;
+					secondx += 2;					
+				} else {
+					firstz -= 2;
+					secondz -= 2;
+				}
+
+				var fMer5 = new THREE.Mesh( geometry, materialGrey3 );
+				scene.add(fMer5);
+				fMer5.position.set(firstx, 13.5, firstz);
+
+				var fMer6 = new THREE.Mesh( geometry, materialGrey3 );
+				scene.add(fMer6);
+				fMer6.position.set(secondx, 13.5, secondz);
+
+			}
+
+			//commencing faces building
+			var siFrFace = new THREE.Mesh( geometry, materialGrey );
+			scene.add( siFrFace );
+			siFrFace.scale.set(7, 13, 3);
+			siFrFace.position.set(-6.5, 6.5, 0);
+			
+			var upFrFace = new THREE.Mesh( geometry, materialGrey );
+			scene.add( upFrFace );
+			upFrFace.scale.set(3, 3, 3);
+			upFrFace.position.set(-1.5, 11.5, 0);
+
+			//side face
+			var sideFace = new THREE.Mesh( geometry, materialGrey );
+			scene.add( sideFace );
+			sideFace.scale.set(3, 13, 12);
+			sideFace.position.set(-8.5, 6.5, -7.5);
+
+			//back face
+			var backFace = new THREE.Mesh( geometry, materialGrey );
+			scene.add( backFace );
+			backFace.scale.set(6, 13, 3);
+			backFace.position.set(-7, 6.5, -15);
+
+			//corner towers
+			var fTowFloor = new THREE.Mesh( geometry, materialGrey2 );
+			scene.add( fTowFloor );
+			fTowFloor.scale.set(5, 2, 5);
+			fTowFloor.position.set(-8.5, 14, 0);
+
+			var bTowFloor = new THREE.Mesh( geometry, materialGrey2 );
+			scene.add( bTowFloor );
+			bTowFloor.scale.set(5, 2, 5);
+			bTowFloor.position.set(-8.5, 14, -15);
+
+			//central structure
+			var cenSide = new THREE.Mesh( geometry, materialGrey3 );
+			scene.add( cenSide );
+			cenSide.scale.set(1, 14, 3);
+			cenSide.position.set(-4.5, 7, -12);
+
+			var cenFront = new THREE.Mesh( geometry, materialGrey3 );
+			scene.add( cenFront );
+			cenFront.scale.set(4, 14, 1);
+			cenFront.position.set(-2, 7, -11);
+
+			var cenBody = new THREE.Mesh( geometry, materialGrey2 );
+			scene.add( cenBody );
+			cenBody.scale.set(4, 16, 7);
+			cenBody.position.set(-2, 8, -15);
+
+			//merlons
+				//front merlons
+
+			wallMerlonsHor(-4.5, 1, Hor);
+
+				//side merlons
+
+			wallMerlonsHor(-9.5, -3, Ver);
+			wallMerlonsHor(-9.5, -8, Ver);
+
+				//back "merlons"
+			var bMer1 = new THREE.Mesh( geometry, materialGrey3 );
+			scene.add(bMer1);
+			bMer1.scale.set(2,1,1);
+			bMer1.position.set(-5, 13.5, -14);
+			
+			var bMer2 = new THREE.Mesh( geometry, materialGrey3 );
+			scene.add(bMer2);
+			bMer2.scale.set(2,1,1);
+			bMer2.position.set(-5, 13.5, -16);
+
+				//front&back tower merlons
+
+			towerMerlons(-8.5, 0);
+			towerMerlons(-8.5, -15);
+
+
+			stats = new Stats();
+			stats.domElement.style.position = 'absolute';
+			stats.domElement.style.top = '0px';
+			document.body.appendChild( stats.domElement );
+			
+			// uncomment if you need to draw coordinate axes when building the scene
+			Coordinates.drawAllAxes();
+			
+			controls = new THREE.OrbitControls( camera );
+			controls.addEventListener( 'change', Render );
+			
+			
+		}
+		
+		function Update() {
+			requestAnimationFrame( Update );
+			controls.update();  
+			stats.update();
+			Render();
+		}
+		
+		function Render() {
+			
+			renderer.render(scene, camera);
+		}
+		
+		Start();
+		Update();
+			
+		</script>
+	</body>
+</html>
