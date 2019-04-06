@@ -186,6 +186,27 @@
 			scene.add( cenBody );
 			cenBody.scale.set(4, 16, 7);
 			cenBody.position.set(-2, 8, -15);
+			
+			var cenTow = new THREE.Mesh( geometry, materialGrey3 );
+			scene.add( cenTow );
+			cenTow.scale.set(2, 4, 3);
+			cenTow.position.set(-1, 18, -15);
+
+			var lRoof = new THREE.Mesh( geometry, materialRed );
+			scene.add( lRoof );
+			lRoof.scale.set(2, 1, 3);
+			lRoof.position.set(-1, 20.5, -15);
+
+			var uRoof = new THREE.Mesh( geometry, materialRed );
+			scene.add( uRoof );
+			uRoof.scale.set(1, 1, 3);
+			uRoof.position.set(-0.5, 21, -15);
+
+			//building the warehouse
+			var warehouse = new THREE.Mesh( geometry, materialBrown );
+			scene.add( warehouse );
+			warehouse.scale.set(3, 5, 6);
+			warehouse.position.set(-5.5, 2.5, -6.5);
 
 			//merlons
 				//front merlons
