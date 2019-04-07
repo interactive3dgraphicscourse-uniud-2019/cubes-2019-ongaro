@@ -30,12 +30,113 @@
 		var geometry = new THREE.BoxGeometry(1,1,1);
 		var materialGrey = new THREE.MeshBasicMaterial( { color: 0xaaaaaa } );
 		var materialGrey2 = new THREE.MeshBasicMaterial( { color: 0x888888 } );
-		var materialGrey3 = new THREE.MeshBasicMaterial( { color: 0x666666 } );
 		var materialRed = new THREE.MeshBasicMaterial({ color: 0xFF0000 });
 		var materialBrown = new THREE.MeshBasicMaterial({ color: 0xBA4A00 });
 		var materialBlack = new THREE.MeshBasicMaterial( { color: 0x111111 } );
-		
+
 		scene = new THREE.Scene();
+
+		var l = 0;
+		var floor = new THREE.Object3D();
+		scene.add(floor);
+
+		var textureWood = new THREE.TextureLoader().load( "textures/log.jpg" );
+		textureWood.wrapS = THREE.RepeatWrapping;
+		textureWood.wrapT = THREE.RepeatWrapping;
+		textureWood.repeat.set( 5, 1 );
+		var materialWood = new THREE.MeshBasicMaterial({ map: textureWood });
+
+		var textureWater = new THREE.TextureLoader().load( "textures/water.jpg" );
+		var materialWater = new THREE.MeshBasicMaterial({ map: textureWater });
+
+		var textureRock = new THREE.TextureLoader().load( "textures/Rocks.jpg" );
+		var materialRock = new THREE.MeshBasicMaterial({ map: textureRock });
+
+		var textureGrass = new THREE.TextureLoader().load( "textures/Grass.jpg" );
+		var materialGrass = new THREE.MeshBasicMaterial({ map: textureGrass });
+
+		var textureBricks = new THREE.TextureLoader().load( "textures/Gray_Bricks.jpg" );
+		var materialBricks = new THREE.MeshBasicMaterial({ map: textureBricks });
+
+		var textureBricks2 = new THREE.TextureLoader().load( "textures/Half_Bricks.jpg" );
+		var materialBricks2 = new THREE.MeshBasicMaterial({ map: textureBricks2 });
+
+		var textureBricks3 = new THREE.TextureLoader().load( "textures/Small_Bricks.jpg" );
+		var materialBricks3 = new THREE.MeshBasicMaterial({ map: textureBricks3 });
+
+		var textureBricks4 = new THREE.TextureLoader().load( "textures/Rocky.jpg" );
+		var materialGrey3 = new THREE.MeshBasicMaterial( { map: textureBricks4 } );
+
+		var textureTower = new THREE.TextureLoader().load( "textures/tower.jpg" );
+		var materialTower = new THREE.MeshBasicMaterial( { map: textureTower } );
+
+		var textureWare = new THREE.TextureLoader().load( "textures/warehouse.jpg" );
+		var materialWare = new THREE.MeshBasicMaterial( { map: textureWare } );
+		
+		var textureDoor = new THREE.TextureLoader().load( "textures/door.jpg" );
+		var materialDoor = new THREE.MeshBasicMaterial( { map: textureDoor } );
+
+		var textureCent = new THREE.TextureLoader().load( "textures/centow.jpg" );
+		var materialCent = new THREE.MeshBasicMaterial( { map: textureCent } );
+
+		var liftingBridge = new THREE.Mesh( geometry, materialWood );
+		liftingBridge.scale.set(6, 10, 1);
+		liftingBridge.position.set(0, 5, 0);
+
+		var hinge = new THREE.Object3D()
+		scene.add(hinge);
+		hinge.add( liftingBridge );
+		var t = Date.now();
+		var i = 0;
+
+		function bridgeRotate(verse){
+			var temp = Date.now();
+
+			if(verse == 0){
+				hinge.rotation.x += ( ( temp - t ) / 60 ) * Math.PI/180;
+				if(hinge.rotation.x >= 90*Math.PI/180){
+					i = 1;
+				}
+			} else {
+				hinge.rotation.x -= ( ( temp - t ) /60 ) * Math.PI/180;
+				if(hinge.rotation.x <= 0){
+					i = 0;
+				}
+			}
+			t = Date.now();
+		}
+
+		//return array with height data from img, taken from: http://danni-three.blogspot.it/2013/09/threejs-heightmaps.html
+		function getHeightData(img, scale) {
+			
+			if (scale == undefined) scale=1;
+
+			var canvas = document.createElement( 'canvas' );
+			canvas.width = img.width;
+			canvas.height = img.height;
+			var context = canvas.getContext( '2d' );
+
+			var size = img.width * img.height;
+			console.log(size);
+			var data = new Float32Array( size );
+
+			context.drawImage(img,0,0);
+
+			for ( var i = 0; i < size; i ++ ) {
+				data[i] = 0
+			}
+
+			var imgd = context.getImageData(0, 0, img.width, img.height);
+			var pix = imgd.data;
+
+			var j=0;
+			for (var i = 0; i<pix.length; i +=4) {
+				var all = pix[i]+pix[i+1]+pix[i+2];  // all is in range 0 - 255*3
+				data[j++] = scale*all/3;   
+			}
+
+			return data;
+		}
 
 		function Start() {
 
@@ -52,7 +153,23 @@
 			var Hor = 2;
 			var Ver = 1;
 
-			function towerMerlons(centerx, centerz){
+			function makeTerrain( i, value, width, height ){
+				var x = (i%width) * 40/width;
+				var z = Math.trunc(i/height) * 40/height;
+				if(value>45){
+					var terrainBox = new THREE.Mesh( geometry, materialRock );
+				} else if(value<20){
+					var terrainBox = new THREE.Mesh( geometry, materialWater );
+				} else {
+					var terrainBox = new THREE.Mesh( geometry, materialGrass );
+				}
+				floor.add(terrainBox);
+				terrainBox.scale.set(40/width, 6, 40/height);
+				terrainBox.position.set(x, value/10, z);
+				
+			}
+
+			function towerMerlons(centerx, centerz){//this function creates 8 merlons on top of towers
 			
 				var fTMer1 = new THREE.Mesh( geometry, materialGrey3 );
 				scene.add(fTMer1);
@@ -88,7 +205,7 @@
 
 			}
 
-			function wallMerlonsHor(firstx, firstz, orient){
+			function wallMerlonsHor(firstx, firstz, orient){//this function creates 3 couples of merlons either horizontally or vertically
 
 				if(orient == Hor){
 					secondz = firstz-2;
@@ -140,59 +257,59 @@
 
 			}
 
-			function HalfStructure(side){
+			function HalfStructure(side){//this function places half of the castle' s structure
 
 				//commencing faces building
-				var siFrFace = new THREE.Mesh( geometry, materialGrey );
+				var siFrFace = new THREE.Mesh( geometry, materialBricks2 );
 				scene.add( siFrFace );
 				siFrFace.scale.set(7, 13, 3);
 				siFrFace.position.set(side*-6.5, 6.5, 0);
 				
-				var upFrFace = new THREE.Mesh( geometry, materialGrey );
+				var upFrFace = new THREE.Mesh( geometry, materialBricks3 );
 				scene.add( upFrFace );
 				upFrFace.scale.set(3, 3, 3);
 				upFrFace.position.set(side*-1.5, 11.5, 0);
 
 				//side face
-				var sideFace = new THREE.Mesh( geometry, materialGrey );
+				var sideFace = new THREE.Mesh( geometry, materialBricks );
 				scene.add( sideFace );
-				sideFace.scale.set(3, 13, 12);
-				sideFace.position.set(side*-8.5, 6.5, -7.5);
+				sideFace.scale.set(3, 13, 17.98);
+				sideFace.position.set(side*-8.51, 6.5, -7.5);
 
 				//back face
-				var backFace = new THREE.Mesh( geometry, materialGrey );
+				var backFace = new THREE.Mesh( geometry, materialBricks2 );
 				scene.add( backFace );
 				backFace.scale.set(6, 13, 3);
 				backFace.position.set(side*-7, 6.5, -15);
 
 				//corner towers
-				var fTowFloor = new THREE.Mesh( geometry, materialGrey2 );
+				var fTowFloor = new THREE.Mesh( geometry, materialTower );
 				scene.add( fTowFloor );
 				fTowFloor.scale.set(5, 2, 5);
 				fTowFloor.position.set(side*-8.5, 14, 0);
 
-				var bTowFloor = new THREE.Mesh( geometry, materialGrey2 );
+				var bTowFloor = new THREE.Mesh( geometry, materialTower );
 				scene.add( bTowFloor );
 				bTowFloor.scale.set(5, 2, 5);
 				bTowFloor.position.set(side*-8.5, 14, -15);
 
 				//central structure
-				var cenSide = new THREE.Mesh( geometry, materialGrey3 );
+				var cenSide = new THREE.Mesh( geometry, materialBricks2 );
 				scene.add( cenSide );
 				cenSide.scale.set(1, 14, 3);
 				cenSide.position.set(side*-4.5, 7, -12);
 
-				var cenFront = new THREE.Mesh( geometry, materialGrey3 );
+				var cenFront = new THREE.Mesh( geometry, materialBricks2 );
 				scene.add( cenFront );
 				cenFront.scale.set(4, 14, 1);
 				cenFront.position.set(side*-2, 7, -11);
 
-				var cenBody = new THREE.Mesh( geometry, materialGrey2 );
+				var cenBody = new THREE.Mesh( geometry, materialBricks2 );
 				scene.add( cenBody );
 				cenBody.scale.set(4, 16, 7);
 				cenBody.position.set(side*-2, 8, -15);
 				
-				var cenTow = new THREE.Mesh( geometry, materialGrey3 );
+				var cenTow = new THREE.Mesh( geometry, materialCent );
 				scene.add( cenTow );
 				cenTow.scale.set(2, 4, 3);
 				cenTow.position.set(side*-1, 18, -15);
@@ -240,12 +357,12 @@
 				casMer7.position.set(side*-0.5, 16.5, -18);
 
 				//building the warehouse
-				var warehouse = new THREE.Mesh( geometry, materialBrown );
+				var warehouse = new THREE.Mesh( geometry, materialWare );
 				scene.add( warehouse );
 				warehouse.scale.set(3, 4, 6);
 				warehouse.position.set(side*-5.5, 2, -6.5);
 
-				var door = new THREE.Mesh( geometry, materialBlack );
+				var door = new THREE.Mesh( geometry, materialDoor );
 				scene.add( door );
 				door.scale.set(0.1, 2, 1);
 				door.position.set(side*-3.95, 1, -8);
@@ -262,6 +379,8 @@
 				bMer2.position.set(side*-5, 13.5, -16);
 
 			}
+
+			//castle's main body construction
 
 			HalfStructure(1);
 			HalfStructure(-1);
@@ -286,6 +405,27 @@
 			towerMerlons(8.5, 0);
 			towerMerlons(8.5, -15);
 
+			// terrain
+			var img = new Image();
+			img.onload = function () {
+  
+				//get height data from img
+				var data = getHeightData(img,0.2);
+				l = data.length;
+				arr = data;
+				
+				for(var i = 0; i<l; i++){
+					makeTerrain(i, data[i], 20, 20);
+				}
+
+			}
+
+			// load img source
+			img.src = "textures/heightmap3.png";
+
+			//setting the position of the pavement
+			floor.position.set(-19, -8, -27);
+
 			stats = new Stats();
 			stats.domElement.style.position = 'absolute';
 			stats.domElement.style.top = '0px';
@@ -296,34 +436,7 @@
 			
 			controls = new THREE.OrbitControls( camera );
 			controls.addEventListener( 'change', Render );
-			
-		}
 
-		var liftingBridge = new THREE.Mesh( geometry, materialBrown );
-		liftingBridge.scale.set(6, 10, 1);
-		liftingBridge.position.set(0, 5, 0);
-
-		var hinge = new THREE.Object3D()
-		scene.add(hinge);
-		hinge.add( liftingBridge );
-		var t = Date.now();
-		var i = 0;
-
-		function bridgeRotate(verse){
-			var temp = Date.now();
-
-			if(verse == 0){
-				hinge.rotation.x += ( ( temp - t ) / 60 ) * Math.PI/180;
-				if(hinge.rotation.x >= 90*Math.PI/180){
-					i = 1;
-				}
-			} else {
-				hinge.rotation.x -= ( ( temp - t ) /60 ) * Math.PI/180;
-				if(hinge.rotation.x <= 0){
-					i = 0;
-				}
-			}
-			t = Date.now();
 		}
 
 		function Update() {

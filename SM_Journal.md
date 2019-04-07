@@ -11,7 +11,17 @@ I realized that the structure is symmetrical, so i' m considering positioning ha
 Half of the wall structure is done, no problems so far. Switching to corner towers and merlons now
 Merlon placing is taking up quite a lot of code lines, so i' ll definitely think of a more efficient way to place them with some functions.
 The function for placing tower merlons is done and working. Gonna work on a function that makes a cluster of 6 merlons to rotate/traslate where needed
-
+The function for merlons clusters is also done, works just fine and saves quite some lines.
+Finished the left half of the structure, proceding to making it into a function to easily duplicate it mirrored.
+Function "halfStructure" completed, works as intended. Proceding in making the lifting bridge and relative animation.
+Lifting bridge is up and rotating as intended.
+Starting to experiment with textures
+Getting some simple textures, i' m taking them from the websites "Unsplash" and "TextureLib" wich assures they are copyright-free images
+I' m now starting to work on the heightmap function.
+The function now correctly creates a floor following the "heightmap.png" picture in the "texture" folder, i just have to tweak its numbers to make it look good.
+I reduced the dimension of the heightmap picture to keep FPS at 60, and tweaked the position of the floor:
+now the ground where the castle lies and the road connected to it with the bridge are brown, the pit is blue as to represent water and the terrain around it is green.
+ 
 
 
 
