@@ -28,11 +28,6 @@
 		var scene, camera, renderer, controls, stats;
 
 		var geometry = new THREE.BoxGeometry(1,1,1);
-		var materialGrey = new THREE.MeshBasicMaterial( { color: 0xaaaaaa } );
-		var materialGrey2 = new THREE.MeshBasicMaterial( { color: 0x888888 } );
-		var materialRed = new THREE.MeshBasicMaterial({ color: 0xFF0000 });
-		var materialBrown = new THREE.MeshBasicMaterial({ color: 0xBA4A00 });
-		var materialBlack = new THREE.MeshBasicMaterial( { color: 0x111111 } );
 
 		scene = new THREE.Scene();
 
@@ -78,6 +73,11 @@
 
 		var textureCent = new THREE.TextureLoader().load( "textures/centow.jpg" );
 		var materialCent = new THREE.MeshBasicMaterial( { map: textureCent } );
+
+		var textureRoof = new THREE.TextureLoader().load( "textures/roof.jpg" );
+		var materialRoof = new THREE.MeshBasicMaterial( { map: textureRoof } );
+
+		
 
 		var liftingBridge = new THREE.Mesh( geometry, materialWood );
 		liftingBridge.scale.set(6, 10, 1);
@@ -314,15 +314,15 @@
 				cenTow.scale.set(2, 4, 3);
 				cenTow.position.set(side*-1, 18, -15);
 
-				var lRoof = new THREE.Mesh( geometry, materialRed );
+				var lRoof = new THREE.Mesh( geometry, materialRoof );
 				scene.add( lRoof );
 				lRoof.scale.set(2, 1, 3);
 				lRoof.position.set(side*-1, 20.5, -15);
 
-				var uRoof = new THREE.Mesh( geometry, materialRed );
+				var uRoof = new THREE.Mesh( geometry, materialRoof );
 				scene.add( uRoof );
 				uRoof.scale.set(1, 1, 3);
-				uRoof.position.set(side*-0.5, 21, -15);
+				uRoof.position.set(side*-0.5, 21.5, -15);
 
 					//castle tower merlons placement
 
